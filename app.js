@@ -6,7 +6,7 @@ module.exports = app;
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 const path = require("path");
-const dbPath = path.join(__dirname, "covid19IndiaPortal");
+const dbPath = path.join(__dirname, "covid19IndiaPortal.db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 let db = null;
@@ -19,7 +19,7 @@ const initializeDBandServer = async () => {
     app.listen(3000);
   } catch (e) {
     console.log(`DB Error: ${e.message}`);
-    process.exit(-1);
+    process.exit(1);
   }
 };
 
@@ -47,7 +47,7 @@ const authenticateToken = (request, response, next) => {
   }
 };
 
-app.post("/login/", authenticateToken, async (request, response) => {
+app.post("/login/", async (request, response) => {
   const { username, password } = request.body;
   const getUserQuery = `SELECT * FROM user WHERE username = '${username}';`;
   const user = await db.get(getUserQuery);
